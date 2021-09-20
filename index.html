@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Service Worker caching strategies</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+body {
+	max-width: 60ch;
+	margin: 1rem auto;
+	font-family: sans-serif;
+}
+	</style>
+</head>
+
+<body>
+	<h1>Service Worker caching strategies</h1>
+	<p id="message">loading...</p>
+	<img src="./assets/logo.svg">
+
+	<script>
+(async function() {
+
+let reg = await navigator.serviceWorker.register("./sw.js", {
+	scope: "./"
+});
+console.log("registered Service Worker for", reg.scope);
+
+await wait(1000);
+let res = await fetch("./assets/data.json");
+let { message } = await res.json();
+document.getElementById("message").textContent = message;
+
+function wait(delay) {
+	return new Promise(resolve => {
+		setTimeout(() => {
+			resolve();
+		}, delay);
+	});
+}
+
+}());
+	</script>
+</body>
+
+</html>
