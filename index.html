@@ -22,10 +22,15 @@ body {
 	<script>
 (async function() {
 
-let reg = await navigator.serviceWorker.register("./sw.js", {
+navigator.serviceWorker.register("./sw.js", {
 	scope: "./"
+}).then(reg => {
+	if(reg.scope) {
+		console.log("registered Service Worker for", reg.scope);
+	} else {
+		console.log("using existing Service Worker");
+	}
 });
-console.log("registered Service Worker for", reg.scope);
 
 await wait(1000);
 let res = await fetch("./assets/data.json");

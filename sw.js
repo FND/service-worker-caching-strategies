@@ -21,7 +21,7 @@ async function staleWhileRevalidate(ev) {
 	ev.waitUntil(networkResponse.
 		then(res => {
 			log("✓ online retrieval", request.url);
-			return add2cache(request, res);
+			return add2cache(request, res.clone());
 		}));
 
 	let cache = await caches.open(CACHE_NAME);
@@ -39,7 +39,7 @@ async function networkFirst(ev) {
 	try {
 		let response = await fetch(request);
 		log("✓ online retrieval", request.url);
-		ev.waitUntil(add2cache(request, response));
+		ev.waitUntil(add2cache(request, response.clone()));
 		return response;
 	} catch(err) {}
 
@@ -53,7 +53,7 @@ async function networkFirst(ev) {
 async function add2cache(request, response) {
 	log("caching", request.url);
 	let cache = await caches.open(CACHE_NAME);
-	await cache.put(request, response.clone());
+	await cache.put(request, response);
 }
 
 function log(...msg) {
